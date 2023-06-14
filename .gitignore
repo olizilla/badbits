@@ -1,3 +1,6 @@
+denylist*.txt
+.clinic
+
 # Logs
 logs
 *.log

@@ -1,0 +1,25 @@
+{
+  "name": "badbits",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "badbits.js",
+  "scripts": {
+    "prepare": "npm run denylist",
+    "test": "standard",
+    "start": "node badbits.js denylist.txt",
+    "denylist": "curl https://badbits.dwebops.pub/badbits.deny -o denylist.txt && head -n 3000 denylist.txt > denylist.3000.txt && head -n 2000 denylist.txt > denylist.2000.txt && head -n 1000 denylist.txt > denylist.1000.txt"
+  },
+  "keywords": [],
+  "author": "olizilla",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@alanshaw/pail": "^0.3.3",
+    "blockstore-core": "^4.2.0",
+    "multiformats": "^11.0.2",
+    "ora": "^6.3.1"
+  },
+  "devDependencies": {
+    "standard": "^17.1.0"
+  }
+}
