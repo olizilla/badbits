@@ -2,7 +2,7 @@
 
 > IPFS [badbits lists](https://badbits.dwebops.pub/) you can follow and fork
 
-🧪 experiment: use [pail] to make lists we can share, edit, sync and fork.
+🧪 experiment: use [pail] to make content-addressed lists we can share, edit, sync and fork.
 
 ## Getting started
 
@@ -18,3 +18,5 @@ If you want to get the latest, full, > 8MB denylist run
 ```
 npm run denylist
 ```
+
+[pail]: https://github.com/alanshaw/pail
