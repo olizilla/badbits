@@ -16,11 +16,17 @@ class BS {
   }
 
   async get (cid) {
-    return this.map.get(cid.toString())
+    const bytes = this.map.get(cid.toString())
+    if (!bytes) return undefined
+    return { cid, bytes }
   }
 
-  async put (block) {
-    return this.map.set(block.cid.toString(), block)
+  put (block) {
+    return this.map.set(block.cid.toString(), block.bytes)
+  }
+
+  rm (cid) {
+    return this.map.delete(cid.toString())
   }
 }
 
@@ -30,7 +36,7 @@ class BS {
 export async function storeAll (src) {
   const init = await ShardBlock.create()
   const bs = new BS()
-  await bs.put(init)
+  bs.put(init)
   let head = init.cid
   let keys = 0
   const spinner = ora(`Importing ${src}`).stopAndPersist().start()
@@ -42,9 +48,12 @@ export async function storeAll (src) {
         if (!line.startsWith('//')) continue
         const key = line.substring(2)
         spinner.text = `${key} (${keys++})`
-        const { root, additions } = await put(bs, head, key, NO_REASON.cid)
+        const { root, additions, removals } = await put(bs, head, key, NO_REASON.cid)
+        for (const block of removals) {
+          bs.rm(block.cid)
+        }
         for (const block of additions) {
-          await bs.put(block)
+          bs.put(block)
         }
         head = root
         await setImmediate() // makes spinner work...
@@ -59,7 +68,6 @@ const { bs, head, keys } = await storeAll(process.argv[2])
 
 const count = bs.map.size
 
-console.log('⁂ pail')
 console.log(`# ${head}`)
-console.log(`- blocks ${count} (${bs.map.get(head.toString()).bytes.length})`)
+console.log(`- blocks ${count}`)
 console.log(`- keys ${keys}`)
